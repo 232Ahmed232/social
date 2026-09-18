@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .models import Tweet
+from django.contrib.auth.models import User
 
 from .forms import TweetForm,UserRegistrationForm
-from django.shortcuts import get_object_or_404,redirect
+from django.shortcuts import get_object_or_404,redirect,get_list_or_404
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
@@ -50,6 +51,16 @@ def tweet_delete(request,tweet_id):
         tweet.delete()
         return redirect('tweet_list')
     return render(request,'tweet_confirm_delete.html',{'tweet':tweet })
+
+@login_required
+def mytweets(request):
+    # user =  get_object_or_404(User,user = request.user)
+
+    tweets = Tweet.objects.filter(user = request.user)
+    print(tweets)
+
+    return render(request,'mytweets.html',{'tweets':tweets })
+
 
 
 def register(request):
